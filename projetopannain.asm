@@ -16,6 +16,16 @@ pulalinha macro
 MAIN PROC 
     MOV AX,@data
     MOV DS,AX
+    MOV AH,0
+    MOV AL,06h  
+    INT 10H
+    MOV AH,0Bh   
+    MOV BH,0
+    MOV BL,0
+    INT 10h
+    MOV BH,1
+    MOV BL,1
+    INT 10H
     MOV AH,09
     LEA DX,MSG
     INT 21h
@@ -51,81 +61,116 @@ MAIN PROC
 
     MOV CH,AL
     CMP CH,"+"
-
-    JNE N_SOMA
+    JNZ N_SOMA
     CALL SOMA
+    JMP FIM
 
     pulalinha
 
 N_SOMA:
     CMP CH,"-"
-    ; JNE N_SUB
+    JNZ N_SUB
     CALL SUBTRACAO
 
-; N_SUB:
-;     CMP CH,"/"
-;     JNE DIVISAO
-;     CALL MULTIPLICACAO
+N_SUB:
+    CMP CH,"*"
+    CALL MULTIPLICA
 
-SOMA:
-    ADD BH,BL
-    OR BH,30H
-   
-    pulalinha
-
-    MOV AH,09h
-    LEA DX,MSG4
-    INT 21h
-    
-    MOV AH,02
-    MOV DL,BH
-    INT 21H
-    JMP FIM
-
-SUBTRACAO:
-
-
-    SUB BH,BL
-    OR BH,30H
-    
-    pulalinha
-
-    MOV AH,09h
-    LEA DX,MSG4
-    INT 21h
-    
-    MOV AH,02
-    MOV DL,BH
-    INT 21H
-
-; MULTIPLICACAO:
-;     MUL BL
-;     OR BH,30H
-   
-;     pulalinha
-
-;     MOV AH,09h
-;     LEA DX,MSG4
-;     INT 21h
-    
-;     MOV AH,02
-;     MOV DL,BH
-;     INT 21H
-
-; DIVISAO:
-;     DIV BL
-;     OR BH,30H
-   
-;     pulalinha
-
-;     MOV AH,09h
-;     LEA DX,MSG4
-;     INT 21h
-    
-;     MOV AH,02
-;     MOV DL,BH
-;     INT 21H
 FIM:
     MOV AH,4ch
-    MAIN ENDP 
-    END MAIN
+    INT 21H
+MAIN ENDP
+
+RESUL PROC
+
+    xor ch,ch 
+    mov ax,cx
+    mov ch,10
+    div ch 
+    
+    mov cl,al   
+    mov ch,ah   
+
+    mov ah,09h
+    lea dx,MSG4 
+    int 21h
+
+    mov ah,02h 
+    mov dl,bl
+    int 21h
+
+    mov ah,02h 
+    or cl,30h 
+    mov dl,cl 
+    int 21h
+
+    mov ah,02h 
+    or ch,30h 
+    mov dl,ch
+    int 21h
+    
+    jmp FIM
+RESUL ENDP
+
+
+SOMA PROC
+    ADD BH,BL
+    MOV CL,BH
+    MOV BL,"+"
+
+    pulalinha    
+    JMP RESUL
+RET
+SOMA ENDP 
+
+SUBTRACAO PROC
+ 
+    SUB BH,BL
+    MOV CL,BH
+    JS NEGA
+    MOV BL,"+"
+    pulalinha
+
+    JMP RESUL
+NEGA:
+    NEG CL
+    MOV BL,"-"
+    pulalinha
+    JMP RESUL 
+
+
+    RET 
+SUBTRACAO ENDP 
+
+MULTIPLICA PROC
+    MOV CH,0
+    MOV CL,BL
+    MOV BL,0
+    JMP PT1
+
+TOPO:   
+    SHL BH,1 
+    INC BL
+PT1:
+    ROR CL,1
+    JNC CAR0
+    JC CAR1
+CAR1:
+    ADD CH,BH
+    CMP BL,3
+    JNZ TOPO
+    MOV CL,CH
+    MOV BL,"+"
+    JMP RESUL
+CAR0:
+    OR CH,00H
+    CMP BL,3
+    JNZ TOPO
+    MOV CL,CH
+    MOV BL,"+"
+    pulalinha
+    JMP RESUL
+RET                 
+MULTIPLICA   ENDP
+
+END MAIN
