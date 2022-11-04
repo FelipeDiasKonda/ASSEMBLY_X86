@@ -127,37 +127,7 @@ RESUL PROC
     
     jmp FIM
 RESUL ENDP
-RESULDIV PROC
-    xor ch,ch 
-    mov ax,cx
-    mov ch,10
-    div ch 
-    
-    mov cl,al   
-    mov ch,ah   
-     
-    mov ah,09h
-    lea dx,MSG4
-    int 21h
 
-    mov ah,02h 
-    mov dl,bl
-    int 21h
-    
-
-    mov ah,02h 
-    or dl,30h 
-    int 21h
-
-    mov ah,02h 
-    mov dl,al
-    or dl,30h
-    int 21h
-    
-    jmp FIM
-
-RET 
-RESULDIV ENDP
 
 SOMA PROC
     ADD BH,BL
