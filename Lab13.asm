@@ -65,10 +65,6 @@ INICIO:
     INT 21H
     CMP AL,13
 
-    CMP AX,32767
-    JG INVALIDO
-    CMP AX,-32768
-    JL  INVALIDO
 
     JNE VOLTA
 
