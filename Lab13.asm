@@ -26,9 +26,6 @@ main endp
 entrada proc
 
 INICIO:
-    PUSH BX
-    PUSH CX
-    PUSH DX
     XOR BX,BX
     XOR CX,CX
 
