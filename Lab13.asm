@@ -26,6 +26,9 @@ main endp
 entrada proc
 
 INICIO:
+    PUSH BX
+    PUSH CX
+    PUSH DX
     XOR BX,BX
     XOR CX,CX
 
@@ -61,7 +64,6 @@ INICIO:
     MOV AH,01
     INT 21H
     CMP AL,13
-
 
     JNE VOLTA
 
@@ -119,6 +121,3 @@ RET
 SAIDA ENDP
 
 END MAIN
-
-
-
