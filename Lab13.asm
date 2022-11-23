@@ -87,7 +87,7 @@ PUSH AX                 ;salva o que esta em AX na pilha, pois como eu vou print
 MOV AH,09   
 LEA DX,msg2             ;printa MSG2
 INT 21H
-POP                     ;desempilha em AX
+POP AX                  ;desempilha em AX
 
 OR AX,AX                ;sinal
 JGE FIM
